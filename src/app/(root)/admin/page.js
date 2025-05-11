@@ -19,6 +19,7 @@ import {
   DeleteIcon,
   ImagePlus,
   Link as LinkIcon,
+  Loader2,
   Pencil,
   Plus,
   Trash2,
@@ -367,6 +368,7 @@ export function getTotalMarks(data){
 
 export default function NewTestPage() {
   const [data, setData] = useState(initialData);
+  const [ loader, setLoader] = useState(false)
 
   const generateUniqueId = () =>
     `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
@@ -541,77 +543,66 @@ export default function NewTestPage() {
       return;
     }
 
-    const filterAndPrepareSections = (sections) =>
-      sections
-        .map((section) => {
-          const filteredQuestions = section.questions.filter((q) => q.added);
-          if (filteredQuestions.length === 0) return null;
+    setLoader(true)
 
-          return {
-            ...section,
-            id: section.id ?? generateUniqueId(),
-            questions: filteredQuestions,
-          };
-        })
-        .filter(Boolean);
-    const testId = `test-${generateUniqueId()}`;
-    const testData = {
-      ...data,
-      id: testId,
-      createdAt: `${new Date()}`,
-      mathematics: filterAndPrepareSections(data.mathematics),
-      physics: filterAndPrepareSections(data.physics),
-      chemistry: filterAndPrepareSections(data.chemistry),
-    };
+    try{
+      const filterAndPrepareSections = (sections) =>
+        sections
+          .map((section) => {
+            const filteredQuestions = section.questions.filter((q) => q.added);
+            if (filteredQuestions.length === 0) return null;
 
-    const finalData = {
-      name: data.testName,
-      batch_id: await getOrCreateBatchId(data.batchName),
-      max_attempts: data.attempts,
-      start: data.startDate,
-      end: data.endDate,
-      total: getTotalMarks(testData),
-      paper: JSON.stringify(testData),
-    };
+            return {
+              ...section,
+              id: section.id ?? generateUniqueId(),
+              questions: filteredQuestions,
+            };
+          })
+          .filter(Boolean);
 
-    console.log(finalData);
+      const testData = {
+        ...data,
+        id: testId,
+        createdAt: `${new Date()}`,
+        mathematics: filterAndPrepareSections(data.mathematics),
+        physics: filterAndPrepareSections(data.physics),
+        chemistry: filterAndPrepareSections(data.chemistry),
+      };
 
-    const res = await fetch("/api/saveTest", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(finalData),
-    });
+      const finalData = {
+        name: data.testName,
+        batch_id: await getOrCreateBatchId(data.batchName),
+        max_attempts: data.attempts,
+        start: data.startDate,
+        end: data.endDate,
+        total: getTotalMarks(testData),
+        paper: JSON.stringify(testData),
+      };
 
-    const result = await res.json();
+      console.log(finalData);
 
-    if (res.ok){
-      toast.success(`Test saved successfully.`);
-      setData(initialData);
-    }else{
-      toast.error("Failed to save test batch");
+      const res = await fetch("/api/saveTest", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(finalData),
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        toast.success(`Test saved successfully.`);
+        setData(initialData);
+      } else {
+        toast.error("Failed to save test batch");
+      }
+    }catch(err){
+      console.log(err)
+      toast.error("Unexpected Error Occured")
+    }finally{
+      setLoader(false)
     }
-
-    // try {
-    //   const response = await fetch("/api/saveTest", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({ batchName: data.batchName, testId, testData }),
-    //   });
-
-    //   if (!response.ok) {
-    //     throw new Error("Failed to save test batch");
-    //   }
-
-    //   const { fileName } = await response.json();
-    //   toast.success(`Test batch saved successfully as ${fileName}`);
-    //   setData(initialData);
-    // } catch (error) {
-    //   toast.error("Failed to save test batch");
-    // }
   };
 
   return (
@@ -981,7 +972,7 @@ export default function NewTestPage() {
                           </h1>
                           <div className="grid gap-4">
                             <div className="grid gap-4">
-                              <Accordion type="multiple" collapsible="true" >
+                              <Accordion type="multiple" collapsible="true">
                                 <AccordionItem value={subject + section.name}>
                                   <AccordionTrigger>
                                     Section Header
@@ -1865,8 +1856,11 @@ export default function NewTestPage() {
           </Tabs>
 
           <Card className="p-6">
-            <Button className="w-full" onClick={handleSave}>
-              Save Test Batch
+            <Button className="w-full" onClick={handleSave} disabled={loader}>
+              {loader ? <div className="flex gap-2 items-center">
+                <Loader2 className="animate-spin" size={14}/>
+                <span>Saving Test</span>
+              </div> : "Save Test"}
             </Button>
           </Card>
         </div>
