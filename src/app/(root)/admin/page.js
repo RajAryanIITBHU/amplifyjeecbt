@@ -559,7 +559,7 @@ export default function NewTestPage() {
             };
           })
           .filter(Boolean);
-
+        const testId = `test-${generateUniqueId()}`
       const testData = {
         ...data,
         id: testId,
