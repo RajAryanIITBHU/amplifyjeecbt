@@ -1,0 +1,109 @@
+import path from "path";
+import { auth } from "@/auth";
+import { getFilesFromSelectedFolders } from "@/utils/getAllFiles";
+import { Award, Calendar, Clock, Search } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import RecentTests from "@/components/RecentTests";
+import SearchInput from "@/components/SearchInput";
+import FilterInput from "../../../FilterInput";
+import { getUpcomingTestCount } from "@/utils/getUpcomingTestCount";
+import { supabaseAdmin } from "@/superbase/superbaseConfig";
+
+export default async function Home({ searchParams }) {
+  const session = await auth();
+   const query = await searchParams.q?.toLowerCase() || "";
+   const filter = await searchParams.filter?.toLowerCase() || "";
+
+  console.log(session);
+  
+  const batchIds = Object.keys(session?.user?.batches)
+  
+  const { data: papers, error: paperErr } = await supabaseAdmin
+    .from("papers")
+    .select("id,max_attempts, name, start, end, total, batch_id, batches (name)")
+    .in("batch_id", batchIds)
+    .order("start", { ascending: false });
+  
+  const upcomingTestCount = await getUpcomingTestCount(papers);
+  console.log(papers)
+
+
+
+  return (
+    <section className="space-y-6 max-sm:px-4 max-sm:py-3 p-6 pb-16 min-h-[calc(100dvh-4rem)]">
+      <div className=" w-full flex max-[500px]:flex-col max-sm:gap-2 gap-4 h-14 sm:h-16 md:h-20 lg:h-24">
+        <div className="flex-1 bg-background rounded-xl flex gap-2 md:gap-4 lg:gap-6 p-2 sm:p-3 md:p-4 lg:p-5 ">
+          <div className="rounded-xl bg-indigo-100 aspect-square h-full flex items-center justify-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-award h-4 w-4 md:h-6 md:w-6 text-indigo-600"
+            >
+              <circle cx="12" cy="8" r="6"></circle>
+              <path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"></path>
+            </svg>
+          </div>
+          <div className="flex flex-col">
+            <span className="tracking-wide text-sm md:text-[0.8rem]">
+              Total Tests
+            </span>
+            <span className="sm:text-[1.1rem] md:text-[1.4rem] font-bold">
+              {papers.length}
+            </span>
+          </div>
+        </div>
+        <div className="flex-1 bg-background rounded-xl flex gap-2 md:gap-4 lg:gap-6 p-2 sm:p-3 md:p-4 lg:p-5 ">
+          <div className="rounded-xl bg-green-100 aspect-square h-full flex items-center justify-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-clock h-6 w-6 text-green-600"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <div className="flex flex-col">
+            <span className="tracking-wide text-sm md:text-[0.8rem]">
+              Upcoming Tests
+            </span>
+            <span className="sm:text-[1.1rem] md:text-[1.4rem] font-bold">
+              {upcomingTestCount}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div className="w-full h-12 flex gap-4">
+        <SearchInput />
+        <FilterInput />
+      </div>
+      {paperErr ? (
+        <div className="w-full px-4 py-12 text-center text-foreground/70 font-lg rounded-xl bg-background overflow-hidden">
+          Error while fetching the tests.
+        </div>
+      ) : papers.length === 0 ? (
+        <div className="w-full px-4 py-12 text-center text-foreground/70 font-lg rounded-xl bg-background overflow-hidden">
+          No Available Tests Right Now
+        </div>
+      ) : (
+        <RecentTests papers={papers} query={query} filter={filter} />
+      )}
+    </section>
+  );
+}
