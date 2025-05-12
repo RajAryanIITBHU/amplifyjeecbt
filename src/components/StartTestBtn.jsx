@@ -1,11 +1,19 @@
-"use client"
-import React, { useState } from 'react'
-import UntilStartTimer from './UntilStartTimer';
+"use client";
+import React, { useState } from "react";
+import UntilStartTimer from "./UntilStartTimer";
 import OpenBankingWindow from "@/components/SecurePopUp";
+import Link from "next/link";
+import { Button } from "./ui/button";
 
-const StartTestBtn = ({id, startDate, endDate, maxAttempts,userAttempts,rawStartDate}) => {
-    const [timeIsClose, setTimeIsClose] = useState(false);
-    console.log(timeIsClose,maxAttempts,userAttempts)
+const StartTestBtn = ({
+  id,
+  startDate,
+  endDate,
+  maxAttempts,
+  userAttempts,
+}) => {
+  const [timeIsClose, setTimeIsClose] = useState(false);
+  console.log(timeIsClose, maxAttempts, userAttempts);
 
   return (
     <div className="flex gap-4 items-center">
@@ -14,19 +22,23 @@ const StartTestBtn = ({id, startDate, endDate, maxAttempts,userAttempts,rawStart
         end={endDate}
         className="p-2 rounded"
         textClassName="font-medium"
-        setReached={(e)=>setTimeIsClose(e)}
+        setReached={(e) => setTimeIsClose(e)}
         tSec={300}
       />
-      <OpenBankingWindow
-        url={`/test/${id}`}
-        isDisabled={parseInt(maxAttempts) <= userAttempts}
-        isUserAutherised={
-          parseInt(maxAttempts) > userAttempts &&
-          timeIsClose
-        }
-      />
+
+      {process.env.NEXT_PUBLIC_DEV === "production" ? (
+        <OpenBankingWindow
+          url={`/test/${id}`}
+          isDisabled={parseInt(maxAttempts) <= parseInt(userAttempts)}
+          isUserAutherised={parseInt(maxAttempts) > parseInt(userAttempts) && timeIsClose}
+        />
+      ) : (
+        <Button asChild>
+          <Link href={`/test/${id}`}>Continue</Link>
+        </Button>
+      )}
     </div>
   );
-}
+};
 
-export default StartTestBtn
+export default StartTestBtn;

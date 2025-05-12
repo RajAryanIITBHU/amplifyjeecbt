@@ -43,11 +43,10 @@ export async function generateMetadata({ params }) {
 
 export default async function TestDetailsPage({ params }) {
   const { id } =await params;
-  ;const p = id.split("-");
+  const p = id.split("-");
 
-  const data = await getTestDataFromId(id);
+  // const data = await getTestDataFromId(id);
   const session = await auth()
-
 
   const { data: paper, error } = await supabaseAdmin
     .from("papers")
@@ -55,9 +54,14 @@ export default async function TestDetailsPage({ params }) {
     .eq("id", parseInt(p[2]))
     .single();
 
-  console.log(paper)
+    const { data: attemptCount, count, error: attemptCountErr } = await supabaseAdmin
+      .from("results")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", session.user.id)
+      .eq("paper_id", parseInt(p[2]));
 
-  const userGivenNoOfTests = session?.user?.tests?.[id] ? session?.user?.tests?.[id] : 0
+
+  
   const parsedPaperData = JSON.parse(paper.paper);
 
   if (!paper) return (
@@ -80,7 +84,7 @@ export default async function TestDetailsPage({ params }) {
 
   if (
     !Object.values(session?.user?.batches).includes(p[0]) &&
-    data.batch !== "FREE"
+    p[0] !== "FREE"
   ) {
     return (
       <section className="w-full bg-accent relative min-h-[calc(100dvh-4rem)] flex justify-center items-center">
@@ -262,14 +266,14 @@ export default async function TestDetailsPage({ params }) {
       <div className="flex mt-4 px-0 sticky bottom-0 left-0 justify-center w-full bg-sidebar py-4">
         <div className="max-w-4xl w-full flex justify-between px-10 gap-6 items-center ">
           <div className="">
-            Attempts: {0}/{paper.max_attempts}
+            Attempts: {count}/{paper.max_attempts}
           </div>
           <StartTestBtn
             id={id}
             startDate={paper.start}
             endDate={paper.end}
             maxAttempts={paper.max_attempts}
-            userAttempts={userGivenNoOfTests}
+            userAttempts={count}
             rawStartDate={paper.start}
           />
         </div>

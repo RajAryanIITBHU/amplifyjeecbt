@@ -55,6 +55,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import UntilStartTimer from "@/components/UntilStartTimer";
+import { supabaseClient } from "@/superbase/supabaseClient";
 
 const INITIAL_TIME = 10800;
 const MAX_WARNINGS = 3;
@@ -109,36 +110,40 @@ export default function TestPage() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "password") {
-      const digits = value.replace(/\D/g, "");
+    // if (name === "password") {
+    //   const digits = value.replace(/\D/g, "");
 
-      let formatted = "";
+    //   let formatted = "";
 
-      if (digits.length <= 2) {
-        formatted = digits;
-      } else if (digits.length <= 4) {
-        formatted = `${digits.slice(0, 2)}/${digits.slice(2)}`;
-      } else {
-        formatted = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(
-          4,
-          8
-        )}`;
-      }
+    //   if (digits.length <= 2) {
+    //     formatted = digits;
+    //   } else if (digits.length <= 4) {
+    //     formatted = `${digits.slice(0, 2)}/${digits.slice(2)}`;
+    //   } else {
+    //     formatted = `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(
+    //       4,
+    //       8
+    //     )}`;
+    //   }
 
-      if (digits.length === 2 || digits.length === 4) {
-        formatted += "/";
-      }
+    //   if (digits.length === 2 || digits.length === 4) {
+    //     formatted += "/";
+    //   }
 
-      setUserData((prev) => ({
-        ...prev,
-        [name]: formatted,
-      }));
-    } else {
-      setUserData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+    //   setUserData((prev) => ({
+    //     ...prev,
+    //     [name]: formatted,
+    //   }));
+    // } else {
+    //   setUserData((prev) => ({
+    //     ...prev,
+    //     [name]: value,
+    //   }));
+    // }
+    setUserData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const handleContinue = async () => {
@@ -147,10 +152,11 @@ export default function TestPage() {
 
       return;
     }
-    if (userData.password !== session?.user?.dob) {
+    let s = userData.password.split("-");
+    if (`${s[2]}-${s[1]}-${s[0]}` !== session?.user?.dob) {
       setErrors((p) => ({
         ...p,
-        rollNo: "Enter your correct Date of Birth in DD/MM/YYYY Format.",
+        rollNo: "Enter your correct Date of Birth in DD-MM-YYYY Format.",
       }));
       return;
     }
@@ -161,8 +167,7 @@ export default function TestPage() {
       console.error("Failed to enter fullscreen:", error);
     }
     setIsIntruction({ next: true, previous: false });
-    fetchData();
-    // setState((prev) => ({ ...prev, isTestStarted: true }));
+    // fetchData();
   };
 
   const handleTestStart = () => {
@@ -191,11 +196,32 @@ export default function TestPage() {
   const fetchData = async () => {
     try {
       const id = params.id;
-      const [batch, ...testParts] = id.split("-");
-      const testName = testParts.join("-");
+      const p = id.split("-");
+      const res = await fetch(`/api/getPaper?id=${p[2]}`);
+      const { paper, error } = await res.json();
 
-      const res = await fetch(`/api/read/${batch}/${testName}`);
-      const data = await res.json();
+      if (paper) {
+        console.log("Paper:", paper);
+      } else {
+        console.error("Error:", error);
+      }
+
+      const data = await JSON.parse(paper.paper);
+      // const { data: paper, error } = await supabaseClient
+      //     .from("papers")
+      //     .select("*")
+      //     .eq("id", parseInt(p[2]))
+      //     .single();
+
+      //     console.log(paper,error)
+
+      //     const data = await JSON.parse(paper);
+      // const [batch, ...testParts] = id.split("-");
+      // const testName = testParts.join("-");
+
+      // const res = await fetch(`/api/read/${batch}/${testName}`);
+      // const data = await res.json();
+
       setQDtata(data);
 
       initializeLocalStorageWithQuestionsBySections({
@@ -289,7 +315,7 @@ export default function TestPage() {
   useEffect(() => {
     if (!isInstruction.next || !isInstruction.previous) return;
 
-    if(session?.user?.role === "admin") return
+    if (session?.user?.role === "admin") return;
 
     let isWarningHandled = false;
     let warningTimeout;
@@ -334,7 +360,7 @@ export default function TestPage() {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
       clearTimeout(warningTimeout);
     };
-  }, [isInstruction, handleWarning,session]);
+  }, [isInstruction, handleWarning, session]);
 
   const handleAnswer = (qid, answer) => {
     let ans = Array.isArray(answer) && answer.length == 0 ? null : answer;
@@ -405,123 +431,109 @@ export default function TestPage() {
   };
 
   const handleEndTest = useCallback(() => {
-    // if (!state.isTestEnded) {
-    //   const confirmEnd = window.confirm(
-    //     "Are you sure you want to submit the test?"
-    //   );
-    //   if (!confirmEnd) return;
-    // }
+    const p = params.id.split("-");
+
     setState((prev) => ({ ...prev, isTestEnded: true }));
+
     if (document.fullscreenElement) {
       document.exitFullscreen();
     }
 
-    if (status !== "authenticated" || !session?.user?.email) return;
+    if (status !== "authenticated" || !session?.user?.email) {
+      console.log("Authentication Failed");
+      return;
+    }
 
     const local = localStorage.getItem("data");
-    if (!local) return;
+    if (!local) {
+      console.log("Local Storage Data failed to Load");
+      return;
+    }
 
     const responseObj = JSON.parse(local)?.test;
-    if (!responseObj) return;
+    if (!responseObj) {
+      console.log("response Object Failed");
+      return;
+    }
+
+    const batchId = Object.keys(session?.user?.batches || {}).find(
+      (key) => session?.user?.batches[key] === p[0]
+    );
+
+    if (!batchId) {
+      console.error("❌ Could not determine batch_id");
+      toast.error("Invalid batch ID");
+      return;
+    }
+
+    const paperId = parseInt(p[2]);
+    const userId = session?.user?.id;
+
+    if (!paperId || !userId) {
+      console.error("❌ Invalid paperId or userId");
+      toast.error("Invalid paper or user information");
+      return;
+    }
 
     const computed = calculateResults(qData, responseObj);
-    setResult(computed);
+
+    if (typeof responseObj !== "object" || typeof computed !== "object") {
+      console.error("❌ Invalid test data");
+      return;
+    }
+
+    const paperTotal =
+      qData.physics
+        .map((sec) => parseInt(sec.marks) * sec.questions.length)
+        .reduce((acc, curr) => acc + curr, 0) +
+      qData.chemistry
+        .map((sec) => parseInt(sec.marks) * sec.questions.length)
+        .reduce((acc, curr) => acc + curr, 0) +
+      qData.mathematics
+        .map((sec) => parseInt(sec.marks) * sec.questions.length)
+        .reduce((acc, curr) => acc + curr, 0);
 
     (async () => {
-      const testId = qData.id;
-      const batch = qData.batchName;
-      const docId = `${batch}-${testId}`;
-      const testDocRef = doc(db, "users", session.user.id, "tests", docId);
-      let at = 1;
-
       try {
-        const testSnap = await getDoc(testDocRef);
-
-        let existingData = testSnap.exists() ? testSnap.data() : {};
-        const previousUserAnswers = existingData.userAnswers || [];
-        const previousResults = existingData.results || [];
-        const attemptCount = (existingData.attempts || 0) + 1;
-        at = attemptCount;
-
-        const paperTotal =
-          qData.physics
-            .map((sec, sec_i) => parseInt(sec.marks) * sec.questions.length)
-            .reduce((acc, curr) => acc + curr, 0) +
-          qData.chemistry
-            .map((sec, sec_i) => parseInt(sec.marks) * sec.questions.length)
-            .reduce((acc, curr) => acc + curr, 0) +
-          qData.mathematics
-            .map((sec, sec_i) => parseInt(sec.marks) * sec.questions.length)
-            .reduce((acc, curr) => acc + curr, 0);
-
-        const testData = {
-          testId,
-          batch,
-          testName: qData.testName,
-          attempts: attemptCount,
+        const row = {
+          submitted_at: new Date().toISOString(),
+          user_id: parseInt(userId),
+          paper_id: paperId,
+          userAnswer: JSON.stringify(responseObj),
+          batch_id: parseInt(batchId),
+          is_real_attempt: false,
           paperTotal: paperTotal,
-          userAnswers: [
-            ...previousUserAnswers,
-            {
-              attempt: attemptCount,
-              data: responseObj,
-              timestamp: new Date().toISOString(),
-              isRealAttempt: state.isRealAttempt,
-            },
-          ],
-          results: [
-            ...previousResults,
-            {
-              attempt: attemptCount,
-              data: computed,
-              timestamp: new Date().toISOString(),
-              isRealAttempt: state.isRealAttempt,
-            },
-          ],
+          result: JSON.stringify(computed),
+          score:parseInt(computed.totalResult.marks)
         };
 
-        await setDoc(testDocRef, testData);
+        console.log(row);
 
-        console.log(
-          "✅ Test result and attempts saved under test doc (array-based)"
-        );
+        const res = await fetch("/api/saveResult", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(row),
+        });
 
-        // const updatedAnswers = [
-        //   ...(session?.user?.tests?.[docId] || []),
-        //   {
-        //     data: responseObj,
-        //     timestamp: new Date().toISOString(),
-        //   },
-        // ];
-
-        if (docId in session?.user?.tests) {
-          update({
-            tests: {
-              ...(session?.user?.tests || {}),
-              [docId]: session.user.tests[docId] + 1,
-            },
-          })
-            .then((res) => console.log("✅ Session updated:", res))
-            .catch((err) => console.error("❌ Update failed:", err));
+        if (res.ok) {
+          console.log(
+            "✅ Test result and attempts saved under test doc (array-based)"
+          );
+          localStorage.removeItem("data");
+          router.push(`/results`);
         } else {
-          update({
-            tests: {
-              ...(session?.user?.tests || {}),
-              [docId]: 1,
-            },
-          })
-            .then((res) => console.log("✅ Session initialized:", res))
-            .catch((err) => console.error("❌ Init failed:", err));
+          console.error("❌ Error saving result");
+          toast.error("Error saving result");
         }
-
-        localStorage.removeItem("data");
-
-        router.push(`/results/${docId}-${at}`);
       } catch (error) {
-        console.error("❌ Error saving result to Firestore:", error);
+        console.error("❌ Error saving result", error);
+        toast.error("Error saving result (exception)");
       }
     })();
-  }, [state.isTestEnded, status, session, qData, calculateResults, setResult]);
+  }, [status, session, qData, calculateResults, params]);
+  
 
   useEffect(() => {
     const data = localStorage.getItem("finalScore");
@@ -530,31 +542,33 @@ export default function TestPage() {
     }
   }, []);
 
-  // useEffect(() => {
+  useEffect(() => {
 
-  //     const blockContextMenu = (e) => e.preventDefault();
-  //     const blockKeyDown = (e) => {
-  //       if (
-  //         e.ctrlKey ||
-  //         e.key === "F12" ||
-  //         (e.metaKey && e.shiftKey) ||
-  //         (e.ctrlKey && e.shiftKey)
-  //       ) {
-  //         e.preventDefault();
-  //       }
-  //     };
+   if (process.env.NEXT_PUBLIC_DEV !== "Development") {
+     const blockContextMenu = (e) => e.preventDefault();
+     const blockKeyDown = (e) => {
+       if (
+         e.ctrlKey ||
+         e.key === "F12" ||
+         (e.metaKey && e.shiftKey) ||
+         (e.ctrlKey && e.shiftKey)
+       ) {
+         e.preventDefault();
+       }
+     };
 
-  //     document.addEventListener("contextmenu", blockContextMenu);
-  //     document.addEventListener("keydown", blockKeyDown);
+     document.addEventListener("contextmenu", blockContextMenu);
+     document.addEventListener("keydown", blockKeyDown);
 
-  //     document.documentElement.requestFullscreen?.().catch(console.warn);
+     document.documentElement.requestFullscreen?.().catch(console.warn);
 
-  //     return () => {
-  //       document.removeEventListener("contextmenu", blockContextMenu);
-  //       document.removeEventListener("keydown", blockKeyDown);
-  //     };
+     return () => {
+       document.removeEventListener("contextmenu", blockContextMenu);
+       document.removeEventListener("keydown", blockKeyDown);
+     };
+   }
 
-  // }, []);
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -752,8 +766,18 @@ export default function TestPage() {
     toast.info("You're at the beginning of the test!");
   };
 
+  if (status === "loading" || !qData || !session) {
+    return (
+      <div className="flex w-full h-screen items-center justify-center">
+        <span>
+          <LoaderCircle className="animate-spin" size={40} />
+        </span>
+      </div>
+    );
+  }
+
   if (
-    !session?.user?.batches.includes(params.id.split("-")[0]) &&
+    !Object.values(session?.user?.batches).includes(params.id.split("-")[0]) &&
     params.id.split("-")[0] !== "FREE"
   ) {
     return (
@@ -775,43 +799,32 @@ export default function TestPage() {
     );
   }
 
-  
+  // if (parseInt(qData?.attempts) === session?.user?.tests[docId]) {
+  //   return (
+  //     <section className="w-full bg-accent relative min-h-[calc(100dvh-4rem)] flex justify-center items-center">
+  //       <Card className="p-6 rounded-xl bg-background gap-4 min-w-sm -mt-10">
+  //         <span className="flex gap-3 items-center text-lg font-medium">
+  //           <CircleAlert size={22} />
+  //           Max Attempts Reached
+  //         </span>
+  //         <p>You have reached your maximum attempts for this test.</p>
+  //         <Link
+  //           href={"/"}
+  //           className="text-primary-foreground hover:text-primary-foreground/80 underline underline-offset-4"
+  //         >
+  //           Home
+  //         </Link>
+  //       </Card>
+  //     </section>
+  //   );
+  // }
 
   // !isInstruction.next && !isInstruction.previous
   if (!isInstruction.next && !isInstruction.previous) {
-    if (status === "loading" || !qData || !session) {
-      return (
-        <div className="flex w-full h-screen items-center justify-center">
-          <span>
-            <LoaderCircle className="animate-spin" size={40} />
-          </span>
-        </div>
-      );
-    }
     const testId = qData.id;
     const batch = qData.batchName;
     const docId = `${batch}-${testId}`;
-    
-    if (parseInt(qData?.attempts) === session?.user?.tests[docId]) {
-      return (
-        <section className="w-full bg-accent relative min-h-[calc(100dvh-4rem)] flex justify-center items-center">
-          <Card className="p-6 rounded-xl bg-background gap-4 min-w-sm -mt-10">
-            <span className="flex gap-3 items-center text-lg font-medium">
-              <CircleAlert size={22} />
-              Max Attempts Reached
-            </span>
-            <p>You have reached your maximum attempts for this test.</p>
-            <Link
-              href={"/"}
-              className="text-primary-foreground hover:text-primary-foreground/80 underline underline-offset-4"
-            >
-              Home
-            </Link>
-          </Card>
-        </section>
-      );
-    }
-     
+
     return (
       <div className="min-h-screen bg-white flex items-center  flex-col">
         <div className="w-full p-1 flex justify-between bg-gray-600 ">
@@ -852,8 +865,8 @@ export default function TestPage() {
                   placeholder="Enter your roll no"
                 />
                 {/* <div className="text-neutral-700 px-3 border-l border-l-neutral-300 hover:bg-neutral-200 h-full py-1.5">
-                  <Keyboard size={28} />
-                </div> */}
+                    <Keyboard size={28} />
+                  </div> */}
               </div>
 
               <div className="flex gap-2 items-center border border-neutral-300">
@@ -868,12 +881,12 @@ export default function TestPage() {
                   value={userData.password}
                   onChange={handleInputChange}
                   className={`w-full px-3 py-2 border rounded-md text-neutral-900 focus:border-none outline-none focus:outline-none border-none`}
-                  placeholder="Enter your DOB (DD/MM/YYYY)"
+                  placeholder="Enter your DOB (DD-MM-YYYY)"
                   maxLength={10}
                 />
                 {/* <div className="text-neutral-700 px-3 border-l border-l-neutral-300 hover:bg-neutral-200 h-full py-1.5">
-                  <Keyboard size={28} />
-                </div> */}
+                    <Keyboard size={28} />
+                  </div> */}
               </div>
             </div>
 
@@ -1450,12 +1463,16 @@ export default function TestPage() {
               beforeTime.isRunning &&
               new Date(qData.startDate) - new Date() > 0 ? (
                 <UntilStartTimer
-                  className={"!test-lg px-4 py-2 font-medium rounded bg-gray-100"}
+                  className={
+                    "!test-lg px-4 py-2 font-medium rounded bg-gray-100"
+                  }
                   start={qData.startDate}
                   end={qData.endDate}
                   textClassName={""}
                   tSec={0}
-                  setReached={(e)=>setBeforeTime((t)=>({...t, isRunning:false}))}
+                  setReached={(e) =>
+                    setBeforeTime((t) => ({ ...t, isRunning: false }))
+                  }
                 />
               ) : (
                 <Button
