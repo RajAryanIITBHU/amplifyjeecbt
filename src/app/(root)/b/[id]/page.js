@@ -48,24 +48,20 @@
 "use client";
 
 import MarkdownWithMath from "@/components/MarkdownWithMathJax";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import React, { useState } from "react";
 
 const Page = () => {
-  const [value, setValue] = useState(`
-This is inline math: $E=mc^2$  
-This is block math:  
+  const [value, setValue] = useState("");
 
-$$
-\\int_0^\\infty e^{-x} dx = 1
-$$
-  `);
+  console.log(value)
 
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">LaTeX Markdown Preview</h1>
 
-      <Textarea
+      <Input
         value={value}
         onChange={(e) => setValue(e.target.value)}
         className="mb-5 max-h-52"
@@ -73,9 +69,16 @@ $$
         placeholder="Type math here..."
       />
 
-      <div className="prose max-w-none">
+      <p>{JSON.stringify(value)}</p>
+
+
+
+      {/* <div className="prose max-w-5xl break-words">
         <MarkdownWithMath content={value} />
       </div>
+      <div className="prose max-w-5xl break-words">
+        <MarkdownWithMath content={ "$$\\text{Consider the following unbalanced reactions:} \\n \\text{Cu + conc. HNO}_3 \\to P + Q + R \\\\ P + \\text{H}_2\\text{S} + \\text{NH}_4\\text{OH} \\to S \\; (\\text{a precipitate}) + R + T \\\\ Q + R \\xrightarrow{\\text{boil}} \\text{HNO}_3 + U \\\\ \\text{Choose the correct statement(s):}$$"} />
+      </div> */}
     </div>
   );
 };

@@ -5,6 +5,7 @@ import { updateAnswerInLocalStorage } from "@/utils/localStorageHelper";
 import DOMPurify from "dompurify";
 import { MathText } from "./MathsText";
 import LatexText from "./LatexText";
+import MarkdownWithMath from "./MarkdownWithMathJax";
 
 export const Question = ({
   question,
@@ -63,7 +64,8 @@ useEffect(() => {
         />
         <div className="flex-1">
           {option.text && (
-            <LatexText text={option.text.replace(/\\\\/g, "\\") || ""} />
+            <MarkdownWithMath content={option.text}/>
+            // <LatexText text={option.text.replace(/\\\\/g, "\\") || ""} />
           )}
           {option.imageUrl && (
             <div className="mt-2">
@@ -92,7 +94,9 @@ useEffect(() => {
             />
           </div>
         )}
-        <LatexText text={question?.content.replace(/\\\\/g, "\\") || ""} />
+        <MarkdownWithMath content={question?.content || ""} />
+
+        {/* <LatexText text={question?.content.replace(/\\\\/g, "\\") || ""} /> */}
         {type === "decimal" && (
           <p className="text-lg pl-2 font-semibold opacity-75">
             (Answer up to decimal places)
@@ -116,7 +120,9 @@ useEffect(() => {
   // For MCQ type questions
   return (
     <div className="space-y-4 relative text-wrap" ref={containerRef}>
-      <LatexText text={question?.content.replace(/\\\\/g, "\\") || ""} />
+      <MarkdownWithMath content={question?.content || ""} />
+
+      {/* <LatexText text={question?.content.replace(/\\\\/g, "\\") || ""} /> */}
       {question?.imageUrl && (
         <div className="flex mb-6">
           <img

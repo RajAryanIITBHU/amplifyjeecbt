@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Select,
@@ -22,15 +22,23 @@ import {
 import { Badge } from "./ui/badge";
 import { capitalize } from "@/utils/localStorageHelper";
 import LatexText from "./LatexText";
+import MarkdownWithMath from "./MarkdownWithMathJax";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const ResultQuestionWiseDisplay = ({
   paperData,
   userAnswer,
-  totalMarks,
   subjectSections,
 }) => {
-  console.log(paperData, userAnswer);
-  const [subject, setSubject] = useState("Mathematics");
+  
+  const [subject, setSubject] = useState(
+    capitalize(Object.keys(subjectSections)[0])
+  );
   const [section, setSection] = useState("Section 1");
 
   const correctClass =
@@ -39,6 +47,10 @@ const ResultQuestionWiseDisplay = ({
     "border-red-500 bg-red-50 dark:bg-red-900/70 dark:border-red-700";
   const defaultClass =
     "border-muted bg-background text-foreground dark:bg-transparent dark:border-muted";
+
+ 
+
+  console.log(subjectSections)
 
   return (
     <>
@@ -57,62 +69,66 @@ const ResultQuestionWiseDisplay = ({
             { correct: 0, incorrect: 0, attempted: 0, total: 0 }
           );
 
-          return (
-            <AccordionItem
-              key={subject}
-              value={subject}
-              className="rounded-xl border bg-card text-card-foreground shadow-sm"
-            >
-              <AccordionTrigger className="p-4 ">
-                <div className="flex justify-between  w-full pr-8">
-                  <h3 className="text-base font-semibold capitalize">
-                    {subject}
-                  </h3>
-                  <div className="text-xs text-muted-foreground flex gap-4 mt-1">
-                    <span>✅ Correct: {stats.correct}</span>
-                    <span>❌ Incorrect: {stats.incorrect}</span>
-                    <span>✏️ Attempted: {stats.correct + stats.incorrect}</span>
-                    <span>📋 Total: {stats.total}</span>
-                  </div>
-                </div>
-              </AccordionTrigger>
-
-              <AccordionContent className="p-4 space-y-6">
-                {sections.map((section, idx) => (
-                  <div key={section.name + idx} className="space-y-2">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-semibold text-sm text-muted-foreground">
-                        Section {idx + 1}
-                      </h4>
-                      <span className="text-xs text-muted-foreground">
-                        {section.questions.length} Questions
+          if (Object.keys(sections).length !== 0) {
+            return (
+              <AccordionItem
+                key={subject}
+                value={subject}
+                className="rounded-xl border bg-card text-card-foreground shadow-sm"
+              >
+                <AccordionTrigger className="p-4 ">
+                  <div className="flex justify-between  w-full pr-8">
+                    <h3 className="text-base font-semibold capitalize">
+                      {subject}
+                    </h3>
+                    <div className="text-xs text-muted-foreground flex gap-4 mt-1">
+                      <span>✅ Correct: {stats.correct}</span>
+                      <span>❌ Incorrect: {stats.incorrect}</span>
+                      <span>
+                        ✏️ Attempted: {stats.correct + stats.incorrect}
                       </span>
+                      <span>📋 Total: {stats.total}</span>
                     </div>
-
-                    <ScrollArea className="w-full overflow-auto rounded-md border border-muted p-2">
-                      <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
-                        {section.questions.map((q, i) => (
-                          <Badge
-                            key={q.id}
-                            title={`${capitalize(q.status)}`}
-                            className={`w-10 h-10 flex items-center justify-center text-base font-medium rounded-md transition-colors cursor-default select-none ${
-                              q.status === "correct"
-                                ? "bg-green-100 text-green-800"
-                                : q.status === "incorrect"
-                                ? "bg-red-100 text-red-800"
-                                : "bg-gray-100 text-gray-500"
-                            }`}
-                          >
-                            {i + 1}
-                          </Badge>
-                        ))}
-                      </div>
-                    </ScrollArea>
                   </div>
-                ))}
-              </AccordionContent>
-            </AccordionItem>
-          );
+                </AccordionTrigger>
+
+                <AccordionContent className="p-4 space-y-6">
+                  {sections.map((section, idx) => (
+                    <div key={section.name + idx} className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-semibold text-sm text-muted-foreground">
+                          Section {idx + 1}
+                        </h4>
+                        <span className="text-xs text-muted-foreground">
+                          {section.questions.length} Questions
+                        </span>
+                      </div>
+
+                      <ScrollArea className="w-full overflow-auto rounded-md border border-muted p-2">
+                        <div className="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
+                          {section.questions.map((q, i) => (
+                            <Badge
+                              key={q.id}
+                              title={`${capitalize(q.status)}`}
+                              className={`w-10 h-10 flex items-center justify-center text-base font-medium rounded-md transition-colors cursor-default select-none ${
+                                q.status === "correct"
+                                  ? "bg-green-100 text-green-800"
+                                  : q.status === "incorrect"
+                                  ? "bg-red-100 text-red-800"
+                                  : "bg-gray-100 text-gray-500"
+                              }`}
+                            >
+                              {i + 1}
+                            </Badge>
+                          ))}
+                        </div>
+                      </ScrollArea>
+                    </div>
+                  ))}
+                </AccordionContent>
+              </AccordionItem>
+            );
+          }
         })}
       </Accordion>
       <Card className="w-full py-6 rounded-2xl shadow-md">
@@ -160,42 +176,77 @@ const ResultQuestionWiseDisplay = ({
             </SelectContent>
           </Select>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 relative">
           {/* Number buttons */}
-          <div className="flex flex-wrap gap-2">
-            {paperData[subject.toLowerCase()]
-              ?.find((s) => s.name === section)
-              ?.questions.map((q, i) => {
-                const userResponse = userAnswer[subject.toLowerCase()]?.find(
-                  (u) => u.id === q.id
-                );
+          <div className="absolute -top-16 right-[calc(100%+1rem)] h-full rounded p-4">
+            <TooltipProvider>
+              <div className="flex flex-wrap gap-4 sticky top-[5rem]">
+                {paperData[subject.toLowerCase()]
+                  ?.find((s) => s.name === section)
+                  ?.questions.map((q, i) => {
+                    const userResponse = userAnswer[
+                      subject.toLowerCase()
+                    ]?.find((u) => u.id === q.id);
 
-                const status = userResponse?.status || "unseen";
-                const correct =
-                  q.options?.[parseInt(q.correctAnswer)]?.id ?? q.correctAnswer;
-                const isCorrect = userResponse?.answer === correct;
+                    const status = userResponse?.status || "unseen";
+                    const correct =
+                      q.options?.[parseInt(q.correctAnswer)]?.id ??
+                      q.correctAnswer;
+                    const isCorrect = userResponse?.answer === correct;
 
-                let className =
-                  "rounded-md px-3 py-2 text-sm font-medium border transition-colors";
+                    // Determine tooltip label
+                    let tooltipText = "Unanswered";
+                    if (status === "answered") {
+                      tooltipText = isCorrect ? "Correct" : "Incorrect";
+                    } else if (status === "seen") {
+                      tooltipText = "Seen";
+                    }
 
-                if (status === "answered") {
-                  className += isCorrect
-                    ? " bg-green-100 text-green-800 border-green-300 dark:bg-green-900 dark:text-green-100 dark:border-green-700"
-                    : " bg-red-100 text-red-800 border-red-300 dark:bg-red-900 dark:text-red-100 dark:border-red-700";
-                } else if (status === "seen") {
-                  className +=
-                    " bg-neutral-100 text-neutral-800 border-neutral-300 dark:bg-neutral-900 dark:text-neutral-100 dark:border-neutral-700";
-                } else {
-                  className +=
-                    " bg-muted text-muted-foreground border-muted dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700";
-                }
+                    let className =
+                      "rounded-md px-3.5 py-2 text-sm font-medium border transition-colors";
 
-                return (
-                  <button key={i} className={className}>
-                    {i + 1}
-                  </button>
-                );
-              })}
+                    if (status === "answered") {
+                      className += isCorrect
+                        ? " bg-green-100 text-green-800 border-green-300 dark:bg-green-900 dark:text-green-100 dark:border-green-700"
+                        : " bg-red-100 text-red-800 border-red-300 dark:bg-red-900 dark:text-red-100 dark:border-red-700";
+                    } else if (status === "seen") {
+                      className +=
+                        " bg-neutral-100 text-neutral-800 border-neutral-300 dark:bg-neutral-900 dark:text-neutral-100 dark:border-neutral-700";
+                    } else {
+                      className +=
+                        " bg-muted text-muted-foreground border-muted dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700";
+                    }
+
+                    return (
+                      <Tooltip key={i}>
+                        <TooltipTrigger asChild>
+                          <button
+                            className={className}
+                            onClick={() => {
+                              const el = document.getElementById(
+                                `${q.id}-${i}`
+                              );
+                              if (el) {
+                                const yOffset = -64; // 4rem offset
+                                const y =
+                                  el.getBoundingClientRect().top +
+                                  window.pageYOffset +
+                                  yOffset;
+                                window.scrollTo({ top: y, behavior: "smooth" });
+                              }
+                            }}
+                          >
+                            {i + 1}
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent side="left">
+                          {tooltipText}
+                        </TooltipContent>
+                      </Tooltip>
+                    );
+                  })}
+              </div>
+            </TooltipProvider>
           </div>
 
           {/* Questions */}
@@ -229,6 +280,7 @@ const ResultQuestionWiseDisplay = ({
               return (
                 <div
                   key={question.id}
+                  id={`${question.id}-${index}`}
                   className="border rounded-xl p-4 mb-4 space-y-2 bg-muted/20"
                 >
                   <div className="flex justify-between items-center">
@@ -248,12 +300,17 @@ const ResultQuestionWiseDisplay = ({
                     )}
                   </div>
 
-                  <div className="mt-1">
-                    {question.content && (
-                      <LatexText
-                        text={question.content.replace(/\\\\/g, "\\")}
-                      />
-                    )}
+                  <div className="mt-1 w-full">
+                    <div className="prose break-words max-w-5xl">
+                      {question.content && (
+                        // <LatexText
+                        //   text={question.content.replace(/\\\\/g, "\\")}
+                        // />
+
+                        <MarkdownWithMath content={question.content} />
+                      )}
+                    </div>
+
                     {question.imageUrl && (
                       <img
                         src={question.imageUrl}
@@ -283,10 +340,14 @@ const ResultQuestionWiseDisplay = ({
                                 : defaultClass
                             }`}
                           >
-                            <div className="flex-1 flex flex-col items-start">
+                            <div className="flex-1 flex flex-col items-start relative break-words text-sm">
                               {opt.text && (
-                                <LatexText
-                                  text={opt.text.replace(/\\\\/g, "\\")}
+                                // <LatexText
+                                //   text={opt.text.replace(/\\\\/g, "\\")}
+                                // />
+                                <MarkdownWithMath
+                                  content={opt.text}
+                                  className="break-words"
                                 />
                               )}
                               {opt.imageUrl && (
@@ -319,17 +380,21 @@ const ResultQuestionWiseDisplay = ({
                         return (
                           <li
                             key={opt.id}
-                            className={`border rounded-md px-3 py-2 flex items-center justify-between ${
+                            className={`border rounded-md px-3 py-2 flex items-center justify-between relative text-sm ${
                               isCorrectAnswer
-                                ? "border-green-500 bg-green-50"
+                                ? correctClass
                                 : isUserAnswer
-                                ? "border-red-500 bg-red-50"
-                                : "border-muted"
+                                ? incorrectClass
+                                : defaultClass
                             }`}
                           >
                             {opt.text && (
-                              <LatexText
-                                text={opt.text.replace(/\\\\/g, "\\")}
+                              // <LatexText
+                              //   text={opt.text.replace(/\\\\/g, "\\")}
+                              // />
+                              <MarkdownWithMath
+                                content={opt.text}
+                                className="break-words"
                               />
                             )}
                             {opt.imageUrl && (

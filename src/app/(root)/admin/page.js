@@ -37,6 +37,7 @@ import LatexText from "@/components/LatexText";
 import { AccordionHeader } from "@radix-ui/react-accordion";
 import { getOrCreateBatchId } from "@/utils/getOrCreateBatchId";
 import { supabaseClient } from "@/superbase/supabaseClient";
+import MarkdownWithMath from "@/components/MarkdownWithMathJax";
 
 
 
@@ -1660,12 +1661,13 @@ export default function NewTestPage() {
                                           >
                                             <div className="flex gap-2">
                                               <div className="flex gap-2 flex-col flex-1">
-                                                <LatexText
+                                                <MarkdownWithMath content={question.content}/>
+                                                {/* <LatexText
                                                   text={question.content.replace(
                                                     /\\\\/g,
                                                     "\\"
                                                   )}
-                                                />
+                                                /> */}
                                                 {question.imageUrl && (
                                                   <div className="relative max-h-[180px] overflow-hidden max-w-[240px]">
                                                     <img
@@ -1701,14 +1703,15 @@ export default function NewTestPage() {
                                                           </span>
                                                           <div>
                                                             {option.text && (
-                                                              <LatexText
-                                                                text={
-                                                                  option.text.replace(
-                                                                    /\\\\/g,
-                                                                    "\\"
-                                                                  ) || ""
-                                                                }
-                                                              />
+                                                              <MarkdownWithMath content={option.text}/>
+                                                              // <LatexText
+                                                              //   text={
+                                                              //     option.text.replace(
+                                                              //       /\\\\/g,
+                                                              //       "\\"
+                                                              //     ) || ""
+                                                              //   }
+                                                              // />
                                                             )}
                                                             {option.imageUrl && (
                                                               <img

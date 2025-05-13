@@ -504,7 +504,8 @@ export default function TestPage() {
           is_real_attempt: false,
           paperTotal: paperTotal,
           result: JSON.stringify(computed),
-          score:parseInt(computed.totalResult.marks)
+          score:parseInt(computed.totalResult.marks),
+          result_overview: JSON.stringify(computed.totalResult)
         };
 
         console.log(row);

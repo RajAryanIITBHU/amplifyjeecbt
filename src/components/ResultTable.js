@@ -36,7 +36,7 @@ function getMaxMarks(result){
 
 
 
-export default function ResultTable({ result }) {
+export default function ResultTable({ result,result_overview, maxMark }) {
 const { marks, attempted, correct, incorrect } = result.totalResult;
 const maxMarks = getMaxMarks(result);
   return (
@@ -86,7 +86,8 @@ const maxMarks = getMaxMarks(result);
 
       <div className="flex gap-4">
         {Object.entries(result).map(([subject, sections]) => {
-          if (subject !== "totalResult") {
+          console.log(subject,sections)
+          if (subject !== "totalResult" && Object.keys(sections).length !== 0) {
             return (
               <SubjectPieChart
                 key={subject}
@@ -99,7 +100,7 @@ const maxMarks = getMaxMarks(result);
       </div>
 
       {Object.entries(result).map(([subject, sections]) => {
-        if (subject !== "totalResult") {
+        if (subject !== "totalResult" && Object.keys(sections).length !== 0) {
           evaluateDataSectionWise(result[subject]);
           return (
             <div

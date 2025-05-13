@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -141,8 +142,72 @@
   @apply text-white float-left font-[bold] h-[38px] text-center w-[34px] leading-[42px] bg-[-6px_-81px];
  
 }
-  .katex {
-  white-space: normal !important;
-  word-break: break-word;
+/* Chemical equations specific CSS */
+/* Properly render the \ce{} command output from KaTeX */
+
+/* Ensure proper spacing in chemical equations */
+.katex .mord.text {
+  margin: 0 0.1em;
+}
+
+/* Fix arrow alignment in chemical equations */
+.katex .mrel {
+  margin: 0 0.2em;
+}
+
+/* Fix subscript positioning in chemical formulas */
+.katex .msupsub {
+  text-align: left;
+}
+
+/* Ensure + signs have proper spacing */
+.katex .mbin {
+  margin: 0 0.15em;
+}
+
+/* Make KaTeX formulas responsive and wrap properly */
+.katex-display > .katex {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.5em 0;
+}
+
+/* For inline chemical formulas that aren't using \ce{} */
+.formula-container {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+.element {
+  display: inline-block;
+}
+
+.superscript {
+  display: inline-block;
+  font-size: 0.75em;
+  line-height: 1;
+  vertical-align: super;
+  margin-left: 1px;
+}
+
+.subscript {
+  display: inline-block;
+  font-size: 0.75em;
+  line-height: 1;
+  vertical-align: sub;
+  margin-left: 1px;
+}
+
+/* Fix for chemical reaction arrows */
+.arrow {
+  display: inline-block;
+  margin: 0 0.25em;
+}
+
+/* Fix for complex molecules like H2O */
+.molecule {
+  white-space: nowrap;
 }
 }

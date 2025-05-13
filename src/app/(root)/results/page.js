@@ -35,7 +35,7 @@ const ResultPage = async () => {
     .from("results")
     .select(
       `
-    id,result, score,is_real_attempt,batch_id,paperTotal, paper_id,submitted_at,paperTotal,
+    id,is_real_attempt,batch_id,paperTotal,paper_id,submitted_at,paperTotal,result_overview,
     papers ( name )
   `
     )
@@ -52,12 +52,12 @@ const ResultPage = async () => {
     const paperId = row.paper_id;
     const paperName = row.papers?.name || "Unknown";
 
-    if (typeof row.result === "string") {
+    if (typeof row.result_overview === "string") {
       try {
-        row.result = JSON.parse(row.result);
+        row.result_overview = JSON.parse(row.result_overview);
       } catch (e) {
         console.warn("Failed to parse result JSON for row:", row);
-        row.result = {};
+        row.result_overview = {};
       }
     }
     if (!groupedResults[paperId]) {
@@ -110,13 +110,15 @@ const ResultPage = async () => {
                 {/* Attempts List */}
                 <div className="p-4 md:p-6 space-y-4">
                   {test.results.map((attempt, index) => {
-                    const stats = getOverallStats(attempt.result);
+                  
                     return (
                       <Link
                         href={`/results/${test.paper_name
                           .toLowerCase()
                           .trim()
-                          .replace(/\s+/g, "_")}-${index+1}-${test.paper_id}-${attempt.id}`}
+                          .replace(/\s+/g, "_")}-${index + 1}-${
+                          test.paper_id
+                        }-${attempt.id}`}
                         key={attempt.submitted_at}
                         className="block"
                       >
@@ -163,21 +165,21 @@ const ResultPage = async () => {
                                 <CircleCheck className="size-4 text-green-600" />
                                 <span className="text-sm">Correct:</span>
                                 <span className="font-semibold text-green-600">
-                                  {stats.totalCorrect}
+                                  {attempt.result_overview.correct}
                                 </span>
                               </div>
                               <div className="flex items-center gap-2">
                                 <CircleX className="size-4 text-red-600" />
                                 <span className="text-sm">Wrong:</span>
                                 <span className="font-semibold text-red-600">
-                                  {stats.totalIncorrect}
+                                  {attempt.result_overview.incorrect}
                                 </span>
                               </div>
                               <div className="flex items-center gap-2">
                                 <Pencil className="size-4 text-blue-500" />
                                 <span className="text-sm">Attempted:</span>
                                 <span className="font-semibold text-blue-500">
-                                  {stats.totalAttempted}
+                                  {attempt.result_overview.attempted}
                                 </span>
                               </div>
                               <div className="flex items-center gap-2">
@@ -186,7 +188,7 @@ const ResultPage = async () => {
                                   Total Questions:
                                 </span>
                                 <span className="font-semibold text-muted-foreground">
-                                  {stats.totalQuestions}
+                                  {attempt.result_overview.total}
                                 </span>
                               </div>
                             </div>
@@ -196,7 +198,8 @@ const ResultPage = async () => {
                               <Target className="size-5 text-primary" />
                               <div className="text-sm">Total Marks:</div>
                               <div className="text-2xl font-bold text-primary">
-                                {stats.totalMarks} / {attempt.paperTotal}
+                                {attempt.result_overview.marks} /{" "}
+                                {attempt.paperTotal}
                               </div>
                             </div>
                           </div>

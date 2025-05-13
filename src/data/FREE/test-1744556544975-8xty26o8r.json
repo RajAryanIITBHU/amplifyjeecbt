@@ -30,7 +30,7 @@
       "questions": [
         {
           "added": true,
-          "content": "\\\\( \\\\text{Find the structure of the major product of bromination of the following compounds using } \\\\frac{Br_2}{FeBr_3}:  \\\\) ",
+          "content": "Find the structure of the major product of bromination of the following compounds using $$\frac{Br_2}{FeBr_3}$$:",
           "imageUrl": "   https://i.ibb.co/3yb2MH8d/image-removebg-preview-4.png ",
           "imageUpload": null,
           "options": [
@@ -98,7 +98,7 @@
         },
         {
           "added": true,
-          "content": "Which of the following reactions is/are correct regarding the formation of major \n\nproduct (Alkene)? ",
+          "content": "Which of the following reactions is/are correct regarding the formation of major product (Alkene)?",
           "imageUrl": "",
           "imageUpload": null,
           "options": [
@@ -132,7 +132,8 @@
         },
         {
           "added": true,
-          "content": "\\\\( \n\n\\\\text{Consider the following unbalanced reactions:} \\\\\\\\\\\\ \n\n\\\\text{Cu + conc. HNO}_3 \\\\to P + Q + R \\\\\\\\\\\\ \n\nP + \\\\text{H}_2\\\\text{S} + \\\\text{NH}_4\\\\text{OH} \\\\to S \\\\; (\\\\text{a precipitate}) + R + T \\\\\\\\\\\\ \n\nQ + R \\\\xrightarrow{\\\\text{boil}} \\\\text{HNO}_3 + U \\\\\\\\\\\\ \n\n\\\\text{Choose the correct statement(s):}  \n\n\\\\) ",
+          "content": "$$\\text{Consider the following unbalanced reactions:} \\\\ \\text{Cu + conc. HNO}_3 \\to P + Q + R \\\\ P + \\text{H}_2\\text{S} + \\text{NH}_4\\text{OH} \\to S \\; (\\text{a precipitate}) + R + T \\\\ Q + R \\xrightarrow{\\text{boil}} \\text{HNO}_3 + U \\\\ \\text{Choose the correct statement(s):}$$"
+,
           "imageUrl": "",
           "imageUpload": null,
           "options": [
@@ -177,7 +178,7 @@
       "questions": [
         {
           "added": true,
-          "content": "\\\\( \\\\text{Choose the correct statement(s) regarding the following oxides of chlorine:} \\\\\\\\\\\\ (I) \\\\; \\\\text{Cl}_2\\\\text{O}, \\\\quad  (II) \\\\; \\\\text{ClO}_2, \\\\quad  (III) \\\\; \\\\text{Cl}_2\\\\text{O}_6, \\\\quad  (IV) \\\\; \\\\text{Cl}_2\\\\text{O}_7. \\\\\\\\\\\\ \\\\) ",
+          "content": "$$\\text{Choose the correct statement(s) regarding the following oxides of chlorine:} \\\\ \\text{(I)} \\; \\text{Cl}_2\\text{O}, \\quad \\text{(II)} \\; \\text{ClO}_2, \\quad \\text{(III)} \\; \\text{Cl}_2\\text{O}_6, \\quad \\text{(IV)} \\; \\text{Cl}_2\\text{O}_7$$",
           "imageUrl": "",
           "imageUpload": null,
           "options": [
@@ -324,7 +325,7 @@
       "questions": [
         {
           "added": true,
-          "content": "\\(O_2\\) gas molecules were adsorbed on solid surface causing its partial pressure to decrease from 1 atm to 0.5atm. Given:  \\(N_A = 6 \\times 10^{23}, \\) volume of vessel = 2.24L, Temperature  = 273K, Total area of solid surface = 100 \\(\\text{cm}^2 \\\\ \\) No. of active sites per unit area = \\( 10^{24} \\text{m}^{-2}\\). Find the number of \\( O_2 \\) molecules adsorbed per active site.",
+          "content": "$$\\text{O}_2 \\text{ gas molecules were adsorbed on a solid surface causing its partial pressure to decrease from 1 atm to 0.5 atm.} \\\\ \\text{Given: } N_A = 6 \\times 10^{23}, \\quad \\text{Volume of vessel} = 2.24 \\, \\text{L}, \\quad \\text{Temperature} = 273 \\, \\text{K}, \\\\ \\text{Total area of solid surface} = 100 \\, \\text{cm}^2, \\quad \\text{No. of active sites per unit area} = 10^{24} \\, \\text{m}^{-2} \\\\ \\text{Find the number of } O_2 \\text{ molecules adsorbed per active site.}$$",
           "imageUrl": "",
           "imageUpload": null,
           "options": [
@@ -358,7 +359,7 @@
         },
         {
           "added": true,
-          "content": "\\\\( \\\\text{A mixture of equimolar quantities of ethyl alcohol and acetic acid is prepared.} \\\\\\\\\\\\ \\\\text{Immediately after mixing, } 10 \\\\, \\\\text{ml of mixture was neutralised by } 10 \\\\, \\\\text{ml of } 1N NaOH. \\\\\\\\\\\\ \\\\text{When the mixture reaches equilibrium, } 10 \\\\, \\\\text{ml requires } 5 \\\\, \\\\text{ml of } 1N \\\\ NaOH \\\\text{ for neutralisation.} \\\\\\\\\\\\ \\\\text{What is the equilibrium constant for the formation of ester?} \\\\) ",
+          "content": "$$\\text{A mixture of equimolar quantities of ethyl alcohol and acetic acid is prepared. Immediately after mixing, } 10 \\, \\text{ml of mixture was neutralised by } 10 \\, \\text{ml of } 1N \\, \\text{NaOH}. \\text{ When the mixture reaches equilibrium, } 10 \\, \\text{ml requires } 5 \\, \\text{ml of } 1N \\, \\text{NaOH for neutralisation. What is the equilibrium constant for the formation of ester?}$$",
           "imageUrl": "",
           "imageUpload": null,
           "options": [
@@ -392,7 +393,7 @@
         },
         {
           "added": true,
-          "content": "\\\\( \\\\text{The sum of unpaired electrons in the complexes:} \\\\\\\\\\\\ [\\\\text{Ti(H}_2\\\\text{O)}_6]^{3+}, [\\\\text{Cr(CN)}_6]^{3-}, [\\\\text{Cr(CO)}_6], [\\\\text{Mn(CN)}_6]^{4-}, [\\\\text{Fe(CN)}_6]^{3-} \\\\\\\\\\\\ \\\\text{is:} \\\\\\\\\\\\ (\\\\text{Given atomic numbers: Ti = 22, Cr = 24, Mn = 25, Fe = 26}) \\\\) ",
+          "content": "$$\text{The sum of unpaired electrons in the complexes: } [\text{Ti(H}_2\text{O)}_6]^{3+}, [\text{Cr(CN)}_6]^{3-}, [\text{Cr(CO)}_6], [\text{Mn(CN)}_6]^{4-}, [\text{Fe(CN)}_6]^{3-} \text{ is: (Given atomic numbers: Ti = 22, Cr = 24, Mn = 25, Fe = 26)}$$",
           "imageUrl": "",
           "imageUpload": null,
           "options": [
@@ -426,7 +427,7 @@
         },
         {
           "added": true,
-          "content": "\\\\(\\\\text{According to molecular orbital theory (MOT), the number of paramagnetic species from the following list is:} \\\\\\\\\\\\ He^+_2, B_2, C_2, N_2, N_2^+,N_2^{2-}, O_2, O_2^{2-}. \\\\) ",
+          "content": "$$\text{According to molecular orbital theory (MOT), the number of paramagnetic species from the following list is: } \text{He}_2^+, \text{B}_2, \text{C}_2, \text{N}_2, \text{N}_2^+, \text{N}_2^{2-}, \text{O}_2, \text{O}_2^{2-}.$$",
           "imageUrl": "",
           "imageUpload": null,
           "options": [
@@ -460,7 +461,7 @@
         },
         {
           "added": true,
-          "content": "\\\\(\\\\text{The amount of water produced (in g) in the oxidation of 1 mole of white phosphorous } (P_4) \\\\\\\\\\\\ \\\\text{ with conc. HNO}_3 \\\\text{ to a compound with the highest oxidation state of phosphorous is:} \\\\\\\\\\\\ \\\\text{(Given molar mass of water = 18 g mol}^{-1}\\\\text{)} \\\\) ",
+          "content": "$$\text{The amount of water produced (in g) in the oxidation of 1 mole of white phosphorous } (P_4) \text{ with conc. HNO}_3 \text{ to a compound with the highest oxidation state of phosphorous is: (Given molar mass of water = 18 g mol}^{-1}\text{)}$$",
           "imageUrl": "",
           "imageUpload": null,
           "options": [
@@ -494,7 +495,7 @@
         },
         {
           "added": true,
-          "content": "\\\\( \\\\text{Find the total number of cyclic halides of molecular formula } C_6H_{11}\\\\text{Br},\\\\\\\\\\\\ \\\\text{ which on heating with ethanolic KOH give product [R] by } E_2 \\\\text{ reaction (Anti-elimination):} \\\\) ",
+          "content": "$$\text{Find the total number of cyclic halides of molecular formula } C_6H_{11}\text{Br, which on heating with ethanolic KOH give product [R] by } E_2 \text{ reaction (Anti-elimination).}$$",
           "imageUrl": "https://i.ibb.co/HDktDF2r/image-removebg-preview-22.png ",
           "imageUpload": null,
           "options": [
@@ -539,7 +540,7 @@
       "questions": [
         {
           "added": true,
-          "content": "Answer Q.15 and Q.16 by appropriately matching the lists based on the information given in the paragraph. \nMatch Column I with Column II for the reaction: A--> product, with initial concentration of ‘A’ equal to ‘a’ M. \n\n\n\nWhich of the following options has the correct combination considering List-I and List-II ",
+          "content": "$$\text{Answer Q.15 and Q.16 by appropriately matching the lists based on the information given in the paragraph. Match Column I with Column II for the reaction: A} \rightarrow \text{ product, with initial concentration of 'A' equal to 'a' M. Which of the following options has the correct combination considering List-I and List-II?}$$",
           "imageUrl": "   https://i.ibb.co/1JPNVDR3/image.png ",
           "imageUpload": null,
           "options": [
@@ -573,7 +574,7 @@
         },
         {
           "added": true,
-          "content": " Answer Q.15 and Q.16 by appropriately matching the lists based on the information given in the paragraph. \nMatch Column I with Column II for the reaction: A--> product, with initial concentration of ‘A’ equal to ‘a’ M. \n\n\nWhich of the following has the incorrect combination considering List-I and List-II ? ",
+          "content": " $$\text{Answer Q.15 and Q.16 by appropriately matching the lists based on the information given in the paragraph. Match Column I with Column II for the reaction: A} \rightarrow \text{product, with initial concentration of 'A' equal to 'a' M. Which of the following has the incorrect combination considering List-I and List-II?}$$",
           "imageUrl": "   https://i.ibb.co/1JPNVDR3/image.png ",
           "imageUpload": null,
           "options": [
@@ -607,7 +608,7 @@
         },
         {
           "added": true,
-          "content": "\\\\( \\\\textbf{Answer Q.17 and Q.18 by appropriately matching the lists based on the information given in the paragraph. } \\\\) \nEther is highly stable except under acidic condition. Different possible mechanism for hydrolysis of ether are shown below. \n\n\nQ. Which combination is \"correct\"? ",
+          "content": "$$\textbf{Answer Q.17 and Q.18 by appropriately matching the lists based on the information given in the paragraph.} \text{ Ether is highly stable except under acidic condition. Different possible mechanisms for hydrolysis of ether are shown below. Q. Which combination is 'correct'?}$$",
           "imageUrl": "https://i.ibb.co/vxnb9NBN/Screenshot-2025-04-13-at-01-28-24-GTA-3-pdf-1-removebg-preview.png ",
           "imageUpload": null,
           "options": [
@@ -641,7 +642,7 @@
         },
         {
           "added": true,
-          "content": "\\\\( \\\\textbf{Answer Q.17 and Q.18 by appropriately matching the lists based on the information given in the paragraph. } \\\\) \nEther is highly stable except under acidic condition. Different possible mechanism for hydrolysis of ether are shown below. \n\n\nQ. Which combination is \"in-correct\"? ",
+          "content": "$$\textbf{Answer Q.17 and Q.18 by appropriately matching the lists based on the information given in the paragraph.} \text{ Ether is highly stable except under acidic condition. Different possible mechanisms for hydrolysis of ether are shown below. Q. Which combination is \"in-correct\"?}$$",
           "imageUrl": "https://i.ibb.co/vxnb9NBN/Screenshot-2025-04-13-at-01-28-24-GTA-3-pdf-1-removebg-preview.png ",
           "imageUpload": null,
           "options": [

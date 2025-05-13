@@ -28,6 +28,8 @@ import ScoreSummary from "@/components/ScoreSummary";
 import { capitalize } from "@/utils/localStorageHelper";
 import { supabaseAdmin } from "@/superbase/superbaseConfig";
 import ResultQuestionWiseDisplay from "@/components/ResultQuestionWiseDisplay";
+import { Button } from "@/components/ui/button";
+import PushBackButton from "@/components/PushBackButton";
 
 export default async function ResultDetailPage({ params }) {
   const { id } = await params;
@@ -39,52 +41,43 @@ export default async function ResultDetailPage({ params }) {
     .select(
       `
     paper_id,
-    userAnswer,
     result,
     submitted_at,
-    papers (
-      name,
-      paper,
-      created_at
-    )
+    papers (name)
   `
     )
     .eq("user_id", session.user.id)
     .eq("id", parseInt(p[3]))
     .single();
+    
+  if (error || data.papers.name.toLowerCase().trim().replace(/\s+/g, "_") !== p[0]){
+
+    console.log(error)
+    return notFound();
+  }
 
   console.log(data);
 
-  const paperData = JSON.parse(data.papers.paper);
-  const userAnswer = JSON.parse(data.userAnswer);
+  // const paperData = JSON.parse(data.papers.paper);
+  // const userAnswer = JSON.parse(data.userAnswer);
 
-  if (false) return notFound();
+  if (typeof data.result === "string"){
+    data.result = JSON.parse(data.result)
+  }
 
-  const subjectSections = evaluateQuestionStatus(paperData, {
-    attempt: parseInt(p[1]),
-    data: userAnswer,
-    isRealAttempt: false,
-    timestamp: data.submitted_at,
-  });
 
-  const fullResult = calculateResults(paperData, userAnswer);
-  const subjectResults = extractSubjectResults(fullResult);
-
-  const totalMarks = Object.values(subjectResults).reduce(
-    (sum, sub) => sum + (sub?.marks || 0),
-    0
-  );
+  // const subjectSections = evaluateQuestionStatus(paperData, {
+  //   attempt: parseInt(p[1]),
+  //   data: userAnswer,
+  //   isRealAttempt: false,
+  //   timestamp: data.submitted_at,
+  // });
 
   return (
     <>
-      <div className="p-4 space-y-8 max-w-4xl mx-auto">
-        <div className="flex gap-4">
-          <Link
-            href={"/results"}
-            className="w-9 h-9 text-center flex justify-between items-center rounded border"
-          >
-            <ArrowLeft size={20} className="mx-auto" />
-          </Link>
+      <div className="p-4 space-y-8 max-w-4xl mx-auto mb-10">
+        <div className="flex items-center gap-4">
+          <PushBackButton/>
           <h2 className="text-2xl font-semibold tracking-tight">
             Test Overview:{" "}
             <span className="text-primary">
@@ -93,11 +86,14 @@ export default async function ResultDetailPage({ params }) {
           </h2>
         </div>
 
-        <ScoreSummary result={fullResult} />
+        <ScoreSummary result={data.result} />
 
-        
-
-        <ResultQuestionWiseDisplay paperData={paperData} userAnswer={userAnswer} totalMarks={totalMarks} subjectSections={subjectSections}/>
+        {/* <ResultQuestionWiseDisplay paperData={paperData} userAnswer={userAnswer}  subjectSections={subjectSections}/> */}
+        <div className="flex justify-start w-full">
+          <Button asChild>
+            <Link href={`/results/${id}/solution`}>View Solution</Link>
+          </Button>
+        </div>
       </div>
     </>
   );
