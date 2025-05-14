@@ -83,7 +83,7 @@ const ResultPage = async () => {
             Test Results
           </h2>
           <div className="text-muted-foreground text-sm">
-            Total Tests: {resultArray.length}
+            Total Tests Attempted: {resultArray.length}
           </div>
         </div>
 

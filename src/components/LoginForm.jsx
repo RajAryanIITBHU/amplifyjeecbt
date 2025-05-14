@@ -9,6 +9,7 @@ import Image from "next/image";
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ email: "", phone: "" });
   const router = useRouter();
@@ -78,8 +79,7 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-accent">
-     
+    <div className="min-h-screen flex items-center justify-center bg-accent">  
       <div className="bg-background p-8 rounded-lg shadow-lg max-w-md w-full">
         <Image
           src={"/logo/logo.png"}

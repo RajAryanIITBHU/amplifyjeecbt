@@ -57,13 +57,13 @@ export default async function ResultSolutionPage({ params }) {
       <div className="w-full relative p-4 space-y-8 max-w-4xl mx-auto mb-10 h-[calc(100vh-4rem)]">
         <div className="flex gap-4 items-center">
           <PushBackButton />
-          <h2 className="text-xl font-semibold tracking-tight">
+          <h2 className="text-2xl font-semibold tracking-tight text-primary">
             Solution
           </h2>{" "}
+          {": "}
+          <span className="text-xl">{formatPaperName(p[0])}</span>
           {" - "}
-          <span className="text-lg opacity-75">{formatPaperName(p[0])}</span>
-          {" - "}
-          <span className="text-lg opacity-75">Attempt: {p[1]}</span>
+          <span className="text-xl">Attempt: {p[1]}</span>
         </div>
         <ResultQuestionWiseDisplay
           paperData={paperData}

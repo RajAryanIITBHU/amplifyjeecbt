@@ -92,9 +92,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         
       }
 
-      // if (trigger === "update" && session?.tests) {
-      //   token.tests = session.tests;
-      // }
+      if (trigger === "update" && session) {
+        token.name = session.name;
+        token.phone = session.phone;
+        token.dob = session.dob;
+      }
 
       return token;
     },

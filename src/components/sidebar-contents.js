@@ -11,7 +11,7 @@ const SidebarContents = () => {
       { title: "Test", url: "/", icon: Home },
       { title: "Results", url: "/results", icon: Inbox },
       // { title: "Leaderboard", url: "/leaderboard", icon: Calendar },
-      // { title: "Settings", url: "/settings", icon: Settings },
+      { title: "Settings", url: "/settings", icon: Settings },
     ];
     const path = usePathname()
   return (

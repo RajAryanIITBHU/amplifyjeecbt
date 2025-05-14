@@ -227,7 +227,7 @@ const ResultQuestionWiseDisplay = ({
                                 `${q.id}-${i}`
                               );
                               if (el) {
-                                const yOffset = -64; // 4rem offset
+                                const yOffset = -64; // 4rem
                                 const y =
                                   el.getBoundingClientRect().top +
                                   window.pageYOffset +
