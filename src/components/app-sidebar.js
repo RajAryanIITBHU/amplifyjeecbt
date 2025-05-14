@@ -55,7 +55,7 @@ export async function AppSidebar() {
             </Link>
           </div>
         </SidebarHeader>
-        <SidebarContents />
+        <SidebarContents role={session.user.role}/>
         <SidebarFooter>
           <NavUser session={session} />
         </SidebarFooter>

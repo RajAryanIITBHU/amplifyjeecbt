@@ -4,9 +4,9 @@ import React from 'react'
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from './ui/sidebar';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Calendar, Home, Inbox, Settings } from 'lucide-react';
+import { Calendar, Home, Inbox, Settings, Shield } from 'lucide-react';
 
-const SidebarContents = () => {
+const SidebarContents = ({role}) => {
     const items = [
       { title: "Test", url: "/", icon: Home },
       { title: "Results", url: "/results", icon: Inbox },
@@ -19,11 +19,29 @@ const SidebarContents = () => {
       <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
+          {role === "admin" && (
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                asChild
+                size="md"
+                className={`${
+                  path === "/admin-dashboard"
+                    ? "bg-primary/70 hover:bg-primary/70"
+                    : "hover:bg-primary/10"
+                }  text-base px-4`}
+              >
+                <Link href={"/admin-dashboard"}>
+                  <Shield />
+                  <span>Admin Dashboard</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
                 asChild
-                size='md'
+                size="md"
                 className={`${
                   path === item.url
                     ? "bg-primary/70 hover:bg-primary/70"
